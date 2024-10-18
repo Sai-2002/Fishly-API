@@ -1,15 +1,33 @@
 from flask import Blueprint
-from flask import request
-import jwt
-import jsonify
+from flask import request, jsonify
+from flask_jwt_extended import create_access_token, get_jwt, jwt_required
+# import jsonify
+import json
 from hashlib import sha256
 
-
 from src.db.user_db import getCred, addNewUser
-from datetime import datetime, timedelta
 
 login_blue = Blueprint("login", __name__)
 
+
+# @login_blue.route("/check")
+# @jwt_required()
+# def check():
+
+#     claims = get_jwt()
+#     if claims['role'] != 'admin':
+#         return jsonify({"msg": "Access forbidden: Admins only!"}), 403
+
+#     return "Working"
+
+
+# @login_blue.route('/authcheck')
+# @jwt_required()
+# def d():
+#     claims = get_jwt()
+#     if claims['role'] != 'customer':
+#         return jsonify({"msg": "Access forbidden: Admins only!"}), 403
+#     return "Good"
 
 @login_blue.route("/login", methods = ["POST"])
 def login():
@@ -21,15 +39,12 @@ def login():
     if not user or user["password"] != sha256(password.encode("utf-8")).hexdigest():
         return "Incorrect Password", 401
     
-    token = jwt.encode({
-        "username": user['username'],
-        "expiration": str(datetime.now() + timedelta(hours=72))
-    }, "Temporary Secret")
+    user_role = user['role']
 
+    access_token = create_access_token(identity=username, additional_claims={"role": user_role})
+    
+    return json.dumps(access_token), 200
 
-    print(user['role'])
-
-    return jsonify({"token" : token.decode("utf-8")})
 
 @login_blue.route("/signUp", methods = ["POST"])
 def signUp():
