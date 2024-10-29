@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask import request, jsonify
-from flask_jwt_extended import create_access_token, get_jwt, jwt_required
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 # import jsonify
 import json
 from hashlib import sha256
@@ -28,6 +28,14 @@ login_blue = Blueprint("login", __name__)
 #     if claims['role'] != 'customer':
 #         return jsonify({"msg": "Access forbidden: Admins only!"}), 403
 #     return "Good"
+
+@login_blue.route('/verify', methods=['POST'])
+@jwt_required()
+def verify_token():
+    # If the token is valid, get the identity (e.g., user id)
+    current_user = get_jwt_identity()
+    return jsonify({"success": True, "user_id": current_user}), 200
+
 
 @login_blue.route("/login", methods = ["POST"])
 def login():
