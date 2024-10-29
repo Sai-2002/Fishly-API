@@ -19,7 +19,7 @@ def addNewUser(username: str, password: str, mobileNumber: str):
 
     result = user.insert_one(cred)
 
-    return f"Created new user {result.inserted_id}"
+    return result.inserted_id
 
 
 def getCred(mobileNumber):

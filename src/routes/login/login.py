@@ -43,7 +43,10 @@ def login():
 
     access_token = create_access_token(identity=mobileNumber, additional_claims={"role": user_role})
     
-    return json.dumps(access_token), 200
+    return jsonify({
+        "id":str(user["_id"]),
+        "token": access_token,
+    }), 200
 
 
 @login_blue.route("/signUp", methods = ["POST"])
@@ -60,7 +63,12 @@ def signUp():
     # if not user or user["password"] != password:
         # return "Incorrect Password", 401
     
-    return "Added New user", 200
+    access_token = create_access_token(identity=mobileNumber, additional_claims={"role": "customer"})
+
+    return jsonify({
+        "id":str(user),
+        "token": access_token,
+    }), 200
 
 
 
