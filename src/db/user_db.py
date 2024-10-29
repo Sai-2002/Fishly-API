@@ -8,10 +8,11 @@ user = db['users']
 
 user.create_index([("username", 1)], unique=True)
 
-def addNewUser(username: str, password: str):
+def addNewUser(username: str, password: str, mobileNumber: str):
 
     cred = {
         "username": username,
+        "mobile": mobileNumber,
         "password": sha256(password.encode("utf-8")).hexdigest(),
         "role": "customer"
     }
@@ -21,5 +22,5 @@ def addNewUser(username: str, password: str):
     return f"Created new user {result.inserted_id}"
 
 
-def getCred(username):
-    return user.find_one({"username":username})
+def getCred(mobileNumber):
+    return user.find_one({"mobile":mobileNumber})

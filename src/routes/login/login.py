@@ -31,17 +31,17 @@ login_blue = Blueprint("login", __name__)
 
 @login_blue.route("/login", methods = ["POST"])
 def login():
-    username = request.form.get("username")
+    mobileNumber = request.form.get("mobile")
     password = request.form.get("password")
 
-    user = getCred(username=username)
+    user = getCred(mobileNumber)
 
     if not user or user["password"] != sha256(password.encode("utf-8")).hexdigest():
         return "Incorrect Password", 401
     
     user_role = user['role']
 
-    access_token = create_access_token(identity=username, additional_claims={"role": user_role})
+    access_token = create_access_token(identity=mobileNumber, additional_claims={"role": user_role})
     
     return json.dumps(access_token), 200
 
@@ -50,9 +50,10 @@ def login():
 def signUp():
     username = request.form.get("username")
     password = request.form.get("password")
+    mobileNumber = request.form.get("mobile")
 
     try:
-        user = addNewUser(username=username, password=password)
+        user = addNewUser(username=username, password=password, mobileNumber=mobileNumber)
         print(user)
     except Exception as e:
         print(f"error {e}")
