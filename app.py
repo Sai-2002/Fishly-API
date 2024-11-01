@@ -8,6 +8,8 @@ from datetime import timedelta
 from src.routes.products.products import products 
 from src.routes.login.login import login_blue
 from src.routes.admin.admin import admin
+from src.routes.user.user import user
+
 
 def create_app():
     app = Flask(__name__)
@@ -23,6 +25,7 @@ def create_app():
     app.register_blueprint(products)
     app.register_blueprint(login_blue)
     app.register_blueprint(admin)
+    app.register_blueprint(user)
 
     @app.route("/")
     def home():
