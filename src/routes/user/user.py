@@ -1,12 +1,12 @@
 from flask import Blueprint, request, jsonify
 from bson import ObjectId
 
-from src.db.user_db import updateAddress, getAddr
-from src.db.orders_db import placeOrder
+from src.db.user_db import updateAddress, getAddr, getUser
+from src.db.orders_db import placeOrder, getOrdersByCId
 
 user = Blueprint("user",__name__)
 
-@user.route("/updateAddress/<id>/", methods = ["POST"])
+@user.route("/updateAddress/<id>", methods = ["POST"])
 def addAddress(id):
 
     response = request.get_json()
@@ -35,6 +35,19 @@ def addOrder():
     return jsonify({
     
     "Result": placeOrder(response),
+    "Success": "Order placed Successfully",
     })
     
+
+@user.route("/getUserDetails/<id>", methods = ["GET"])
+def getUserDetails(id):
+    result = getUser(id)
+
+    result["_id"] = str(result["_id"])
+    return result
+
+
+@user.route("/getOrders/<id>", methods = ["GET"])
+def getOrders(id):
+    return getOrdersByCId(id)
         

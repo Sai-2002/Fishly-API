@@ -27,6 +27,9 @@ def addNewUser(username: str, password: str, mobileNumber: str):
 def getCred(mobileNumber):
     return user.find_one({"mobile":mobileNumber})
 
+def getUser(id):
+    return user.find_one({"_id": ObjectId(id)}, {'password': 0,'role':0})
+
 def updateAddress(id, address):
     filter_query = {"_id": ObjectId(id)}
 

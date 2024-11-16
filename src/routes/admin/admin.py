@@ -16,7 +16,7 @@ def addProduct():
     if claims['role'] != 'admin':
         return jsonify({"msg": "Access forbidden: Admins only!"}), 403
 
-    if 'image' not in request.files:
+    if 'image' not in request.files and 'image1' not in request.files and 'image2' not in request.files:
         return json.dumps({"error":"No image available"}), 400
 
     product = {
@@ -27,12 +27,19 @@ def addProduct():
     "description": request.form.get("description"),
     "macros":request.form.get("macros"),
     "price" : request.form.get("price"),
+    "gravy": request.form.get("gravy"),
+    "fry": request.form.get("fry"),
+    "barbeque": request.form.get("barbeque")
     }
 
-    image = request.files['image']
+    image = request.files["image"]
+    image1 = request.files["image1"]
+    image2 = request.files["image2"]
 
+    
     try:
-        return insertProduct(product=product, image=image)
+        return insertProduct(product=product, image=image, image1=image1, image2=image2)
+    
     except Exception as e:
         print(e)
 
@@ -44,7 +51,7 @@ def updateProduct(id):
     if claims['role'] != 'admin':
         return jsonify({"msg": "Access forbidden: Admins only!"}), 403
 
-    if 'image' not in request.files:
+    if 'image' not in request.files and 'image1' not in request.files and 'image2' not in request.files:
         return json.dumps({"error":"No image available"}), 400
 
     product = {
@@ -55,12 +62,17 @@ def updateProduct(id):
     "description": request.form.get("description"),
     "macros":request.form.get("macros"),
     "price" : request.form.get("price"),
+    "gravy": request.form.get("gravy"),
+    "fry": request.form.get("fry"),
+    "barbeque": request.form.get("barbeque")
     }
 
     image = request.files["image"]
+    image2 = request.files["image1"]
+    image1 = request.files["image2"]
 
     try:
-        return updateProductById(id, product, image)
+        return updateProductById(id, product, image, image1, image2)
     except Exception as e:
         print(e)
 

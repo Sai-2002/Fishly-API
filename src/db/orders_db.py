@@ -1,5 +1,6 @@
 from src.db.setup_db import db
 import json
+from bson import ObjectId
 
 collections_orders = db['orders']
 
@@ -9,10 +10,12 @@ def SerializeOrders(order):
     return {
         "_id": str(order["_id"]),
         "customer_id": str(order["customer_id"]),
-        "razorpay_order_id": order["razorpay_order_id"],
+        "transaction_id": order["transaction_id"],
         "cost" : order["cost"],
         "status": order["status"],
-        "order": order["order"]
+        "order": order["order"],
+        "cuttingMethod": order["cuttingMethod"],
+        "paymentMethod": order["paymentMethod"],
     }
 
 
@@ -27,7 +30,13 @@ def getAllOrders():
 
 
 def getOrdersByCId(id):
-    pass
+    result = collections_orders.find({"customer_id": ObjectId(id), "status": {"$ne":"Delivered"}})
+
+
+    orders_list = [SerializeOrders(order=order) for order in result]
+
+    print(orders_list)
+    return orders_list,200
 
 def updateStatusOfOrder(id):
     pass
