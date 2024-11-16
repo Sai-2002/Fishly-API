@@ -1,6 +1,6 @@
 from src.db.setup_db import db
 from bson import ObjectId
-
+from flask import jsonify
 
 from hashlib import sha256
 
@@ -9,6 +9,16 @@ from hashlib import sha256
 user = db['users']
 
 user.create_index([("username", 1)], unique=True)
+
+def SerializeOrders(user):
+
+    return {
+        "_id": str(user["_id"]),
+        "username": user["username"],
+        "address": user.get("address",""),
+        "mobile": user["mobile"]
+    }
+
 
 def addNewUser(username: str, password: str, mobileNumber: str):
 
@@ -45,6 +55,17 @@ def updateAddress(id, address):
         return "Address Added Succefully!"
     else:
         return "No user found."
+
+
+def getAllUser():
+    customers = user.find({}, {'password': 0, 'role':0})
+
+    customer_list = [SerializeOrders(customer) for customer in customers]
+
+    return jsonify({
+        "customer":customer_list,
+    },200)
+
 
 
 def getAddr(id):

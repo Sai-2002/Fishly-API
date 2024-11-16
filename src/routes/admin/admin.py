@@ -2,9 +2,9 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt
 import json
 
-
+from src.db.user_db import getAllUser
 from src.db.products_db import insertProduct, updateProductById, deleteProduct
-from src.db.orders_db import getAllOrders
+from src.db.orders_db import getAllOrders, getAllUserWithOrders, updateStatusOfOrder
 
 admin = Blueprint("admin", __name__)
 
@@ -96,8 +96,38 @@ def getOrders():
 
     return getAllOrders()
 
-@admin.route("/viewCustomers")
-def viewCustomers():
-    pass
 
+@admin.route("/updateStatusOrder/<id>", methods = ["POST"])
+@jwt_required()
+def statusUpdate(id):
+    claims = get_jwt()
+    if claims['role'] != 'admin':
+        return jsonify({"msg": "Access forbidden: Admin only!"}), 403
+
+    status = request.form.get("status")
+
+    try:
+        return updateStatusOfOrder(id=id, newStatus=status)
+    except Exception as e:
+        return e
+
+@admin.route("/getAllCustomersWithOrders", methods=["POST"])
+@jwt_required()
+def getAllCustomersWithOrders():
+
+    claims = get_jwt()
+    if claims['role'] != 'admin':
+        return jsonify({"msg": "Access forbidden: Admin only!"}), 403
+
+    return getAllUserWithOrders()
+
+@admin.route("/getAllCustomers")
+@jwt_required()
+def viewCustomers():
+    
+    claims = get_jwt()
+    if claims['role'] != 'admin':
+        return jsonify({"msg": "Access forbidden: Admin only!"}), 403
+
+    return getAllUser()
 # @admin.route("")?
