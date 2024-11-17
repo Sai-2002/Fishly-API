@@ -16,7 +16,7 @@ def addProduct():
     if claims['role'] != 'admin':
         return jsonify({"msg": "Access forbidden: Admins only!"}), 403
 
-    if 'image' not in request.files and 'image1' not in request.files and 'image2' not in request.files:
+    if 'image' not in request.files:
         return json.dumps({"error":"No image available"}), 400
 
     product = {
@@ -33,12 +33,10 @@ def addProduct():
     }
 
     image = request.files["image"]
-    image1 = request.files["image1"]
-    image2 = request.files["image2"]
 
     
     try:
-        return insertProduct(product=product, image=image, image1=image1, image2=image2)
+        return insertProduct(product=product, image=image)
     
     except Exception as e:
         print(e)
@@ -51,7 +49,7 @@ def updateProduct(id):
     if claims['role'] != 'admin':
         return jsonify({"msg": "Access forbidden: Admins only!"}), 403
 
-    if 'image' not in request.files and 'image1' not in request.files and 'image2' not in request.files:
+    if 'image' not in request.files:
         return json.dumps({"error":"No image available"}), 400
 
     product = {
@@ -68,11 +66,9 @@ def updateProduct(id):
     }
 
     image = request.files["image"]
-    image2 = request.files["image1"]
-    image1 = request.files["image2"]
 
     try:
-        return updateProductById(id, product, image, image1, image2)
+        return updateProductById(id, product, image)
     except Exception as e:
         print(e)
 
