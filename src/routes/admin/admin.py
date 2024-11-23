@@ -103,9 +103,10 @@ def statusUpdate(id):
     status = request.form.get("status")
 
     try:
+        print("Updating status")
         return updateStatusOfOrder(id=id, newStatus=status)
     except Exception as e:
-        return e
+        return "Could not find the Order"
 
 @admin.route("/getAllCustomersWithOrders", methods=["POST"])
 @jwt_required()

@@ -88,10 +88,12 @@ def getOrdersByCId(id):
 
 def updateStatusOfOrder(id, newStatus):
     
-    results = collections_orders.update_one({
+    results = collections_orders.update_one(
         {"_id": ObjectId(id)},
         {"$set": {"status":newStatus}}
-    })
+    )
+
+    print(results)
 
     if results.matched_count > 0:
         return "Status Update Successfully"
