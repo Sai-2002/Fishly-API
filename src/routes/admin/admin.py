@@ -1,6 +1,9 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt
 import json
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 from src.db.user_db import getAllUser
 from src.db.products_db import insertProduct, updateProductById, deleteProduct
@@ -128,3 +131,32 @@ def viewCustomers():
 
     return getAllUser()
 # @admin.route("")?
+
+@admin.route("/getNotification")
+@jwt_required()
+def getNotification():
+
+    data = request.get_json()
+
+    sender_email = "rajkumar210303@gmail.com"
+    receiver_email = "rajkumar210303@gmail.com"
+    password = "gtra wvat gigh enco"
+
+    subject = data["SUBJECT"]
+    body = data["BODY"]
+
+    message = MIMEMultipart()
+    message["From"] = sender_email
+    message["To"] = receiver_email
+    message["Subject"] = subject
+    message.attach(MIMEText(body, "plain"))
+
+    try:
+    # Connect to the SMTP server (Gmail example)
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.starttls()  # Secure the connection
+            server.login(sender_email, password)  # Login to the email account
+            server.sendmail(sender_email, receiver_email, message.as_string())  # Send the email
+            return "Email sent successfully!"
+    except Exception as e:
+        return f"Failed to send email: {e}"
