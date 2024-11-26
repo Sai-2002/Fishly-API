@@ -132,7 +132,7 @@ def viewCustomers():
     return getAllUser()
 # @admin.route("")?
 
-@admin.route("/getNotification")
+@admin.route("/getNotification", methods=["POST"])
 def getNotification():
 
     data = request.get_json()
