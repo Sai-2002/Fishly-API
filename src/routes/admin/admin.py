@@ -133,7 +133,6 @@ def viewCustomers():
 # @admin.route("")?
 
 @admin.route("/getNotification")
-@jwt_required()
 def getNotification():
 
     data = request.get_json()
