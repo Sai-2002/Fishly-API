@@ -20,12 +20,11 @@ def SerializeOrders(user):
     }
 
 
-def addNewUser(username: str, password: str, mobileNumber: str):
+def addNewUser(username: str, mobileNumber: str):
 
     cred = {
         "username": username,
         "mobile": mobileNumber,
-        "password": sha256(password.encode("utf-8")).hexdigest(),
         "role": "customer"
     }
 

@@ -40,11 +40,11 @@ def verify_token():
 @login_blue.route("/login", methods = ["POST"])
 def login():
     mobileNumber = request.form.get("mobile")
-    password = request.form.get("password")
+    password = request.form.get("username")
 
     user = getCred(mobileNumber)
 
-    if not user or user["password"] != sha256(password.encode("utf-8")).hexdigest():
+    if not user or user["username"] != password:
         return "Incorrect Password", 401
     
     user_role = user['role']
@@ -60,11 +60,10 @@ def login():
 @login_blue.route("/signUp", methods = ["POST"])
 def signUp():
     username = request.form.get("username")
-    password = request.form.get("password")
     mobileNumber = request.form.get("mobile")
 
     try:
-        user = addNewUser(username=username, password=password, mobileNumber=mobileNumber)
+        user = addNewUser(username=username, mobileNumber=mobileNumber)
         print(user)
     except Exception as e:
         print(f"error {e}")
