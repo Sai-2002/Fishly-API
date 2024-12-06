@@ -8,8 +8,6 @@ from hashlib import sha256
 
 user = db['users']
 
-user.create_index([("username", 1)], unique=True)
-
 def SerializeOrders(user):
 
     return {
