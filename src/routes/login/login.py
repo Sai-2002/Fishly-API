@@ -40,11 +40,10 @@ def verify_token():
 @login_blue.route("/login", methods = ["POST"])
 def login():
     mobileNumber = request.form.get("mobile")
-    password = request.form.get("username")
 
     user = getCred(mobileNumber)
 
-    if not user or user["username"] != password:
+    if not user:
         return "Incorrect Password", 401
     
     user_role = user['role']
